@@ -1,10 +1,6 @@
 require('dotenv').config();
 const { setupDiscordBot } = require("./discord-bot.js");
+const { setupWeb3Subscription} = require("./web3.js");
 
-const run = async () => {
-  await setupDiscordBot()
-  console.log("Init;")
-}
-
-
-run();
+setupDiscordBot();
+setupWeb3Subscription();
