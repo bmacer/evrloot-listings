@@ -27,10 +27,17 @@ function setupWeb3Subscription() {
     if (error)
       console.log(error);
     if (!error)
-      console.log("result >>>>", result);
-
+      console.log('received tx!')
       web3.eth.getTransaction(result.transactionHash).then(tx => {
-        decodeInput(tx.input)
+        console.log('found transaction with input:', tx.input)
+
+        const input = tx.input;
+        if (input.startsWith('0xfecb1242')) {
+          console.log('decoding input:', input)
+
+          decodeInput(input)
+        }
+
       })
   });
 
