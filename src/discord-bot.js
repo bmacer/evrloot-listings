@@ -1,4 +1,3 @@
-
 const { Client } = require('discord.js');
 
 module.exports = {
@@ -9,13 +8,13 @@ module.exports = {
 const client = new Client({intents: 0});
 
 async function setupDiscordBot() {
-  require('dotenv').config();
+  require('dotenv').config({path: '../.env'})
+
   client.once('ready', () => {
     console.log('Ready!');
-
   });
 
-  await client.login('MTEyMTQ4OTA2MTExNTMzODc3Mw.GA-Hbm.BYuakhB5klPo4DNQm1dUpFFa1COZtevZl6bNfo');
+  await client.login(process.env.DISCORDJS_TOKEN);
 }
 
 async function postListing(embed) {
