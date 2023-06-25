@@ -1,4 +1,5 @@
 const { postListing } = require('./discord-bot.js')
+const {getItemMetadata} = require("./evrloot-ipfs");
 
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
@@ -11,13 +12,13 @@ module.exports = {
   decodeInput
 }
 
-function decodeInput(input) {
+async function decodeInput(input) {
   console.log('started decoding');
 
-  const hexId = input.substring(130,130+8);
-  const collection = input.substring(482,482+40)
-  const paymentOption = input.substring(546,546+40).toLowerCase()
-  const hexPrice = input.substring(362,362+32) //price in hex rmrk: 10decimals, gmlr: 18 decimals
+  const hexId = input.substring(130, 130 + 8);
+  const collection = input.substring(482, 482 + 40)
+  const paymentOption = input.substring(546, 546 + 40).toLowerCase()
+  const hexPrice = input.substring(362, 362 + 32) //price in hex rmrk: 10decimals, gmlr: 18 decimals
 
   const id = parseInt(hexId, 16);
   const priceInGwei = parseInt(hexPrice, 16);
@@ -43,11 +44,14 @@ function decodeInput(input) {
   }
 
   if (collection === FISH_COLLECTION) {
-    postListing(createFishEmbed(id, readablePrice, paymentOptionText));
+    await postListing(createFishEmbed(id, readablePrice, paymentOptionText));
   } else if (collection === SOUL_COLLECTION) {
-    postListing(createSoulEmbed(id, readablePrice, paymentOptionText));
+    await postListing(createSoulEmbed(id, readablePrice, paymentOptionText));
   } else if (collection === ITEM_COLLECTION) {
-    postListing(createItemEmbed(id, readablePrice, paymentOptionText));
+    const itemMetadata = await getItemMetadata(id);
+    console.log("itemMetadata", itemMetadata);
+
+    await postListing(createItemEmbed(id, itemMetadata, readablePrice, paymentOptionText));
   }
 
 }
@@ -84,18 +88,18 @@ function createSoulEmbed(id, price, paymentOption) {
   };
 }
 
-function createItemEmbed(id, price, paymentOption) {
+function createItemEmbed(id, itemMetadata, price, paymentOption) {
   return {
     color: 0xae1917,
-    title: `Item ${id}`,
+    title: `*${itemMetadata["name"]}*`,
     url: `https://singular.app/collectibles/moonbeam/${ITEM_COLLECTION}/${id}`,
     author: {
       name: 'New Item Listed!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
     description: `Item listed for **${price} ${paymentOption}**`,
-    // thumbnail: {    // item picture missing
-    //   url: 'https://cloudflare-ipfs.com/ipfs/QmTUJeaoABzLeDCHF4THjjnGo91sqLRqixrHwo4mLS8KHE/',
-    // },
+    thumbnail: {
+      url: `https://evrloot.mypinata.cloud/ipfs/${itemMetadata["image"].replace("ipfs://", "")}`,
+    },
   };
 }
