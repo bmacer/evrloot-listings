@@ -1,5 +1,9 @@
 const { postListing } = require('./discord-bot.js')
-const {getItemMetadata} = require("./evrloot-ipfs");
+const {getItemMetadata, getSoulMetadata, getFishMetadata} = require("./evrloot-ipfs");
+const createFishEmbed = require('./embeds/fish-embed')
+const createSoulEmbed = require('./embeds/soul-embed')
+const createItemEmbed = require('./embeds/item-embed')
+
 
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
@@ -44,62 +48,14 @@ async function decodeInput(input) {
   }
 
   if (collection === FISH_COLLECTION) {
-    await postListing(createFishEmbed(id, readablePrice, paymentOptionText));
+    const fishMetadata = await getFishMetadata(id);
+    await postListing(createFishEmbed(id, fishMetadata, readablePrice, paymentOptionText));
   } else if (collection === SOUL_COLLECTION) {
-    await postListing(createSoulEmbed(id, readablePrice, paymentOptionText));
+    const soulMetadata = await getSoulMetadata(id);
+    await postListing(createSoulEmbed(id, soulMetadata, readablePrice, paymentOptionText));
   } else if (collection === ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id);
-    console.log("itemMetadata", itemMetadata);
-
     await postListing(createItemEmbed(id, itemMetadata, readablePrice, paymentOptionText));
   }
 
-}
-
-function createFishEmbed(id, price, paymentOption) {
-  return {
-    color: 0xae1917,
-    title: `Fish ${id}`,
-    url: `https://singular.app/collectibles/moonbeam/${FISH_COLLECTION}/${id}`,
-    author: {
-      name: 'New Fish Listed!',
-      icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
-    },
-    description: `Fish listed for **${price}** ${paymentOption}`,
-    // thumbnail: {    // item picture missing
-    //   url: 'https://cloudflare-ipfs.com/ipfs/QmTUJeaoABzLeDCHF4THjjnGo91sqLRqixrHwo4mLS8KHE/',
-    // },
-  };
-}
-
-function createSoulEmbed(id, price, paymentOption) {
-  return {
-    color: 0xae1917,
-    title: `Soul ${id}`,
-    url: `https://singular.app/collectibles/moonbeam/${SOUL_COLLECTION}/${id}`,
-    author: {
-      name: 'New Soul Listed!',
-      icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
-    },
-    description: `Soul listed for **${price} ${paymentOption}**`,
-    // thumbnail: {    // item picture missing
-    //   url: 'https://cloudflare-ipfs.com/ipfs/QmTUJeaoABzLeDCHF4THjjnGo91sqLRqixrHwo4mLS8KHE/',
-    // },
-  };
-}
-
-function createItemEmbed(id, itemMetadata, price, paymentOption) {
-  return {
-    color: 0xae1917,
-    title: `*${itemMetadata["name"]}*`,
-    url: `https://singular.app/collectibles/moonbeam/${ITEM_COLLECTION}/${id}`,
-    author: {
-      name: 'New Item Listed!',
-      icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
-    },
-    description: `Item listed for **${price} ${paymentOption}**`,
-    thumbnail: {
-      url: `https://evrloot.mypinata.cloud/ipfs/${itemMetadata["image"].replace("ipfs://", "")}`,
-    },
-  };
 }
