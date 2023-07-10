@@ -2,7 +2,7 @@ const removeIpfsStuff = require("../../ipfs-link-tools");
 
 const FISH_COLLECTION = '95492edcc1d373e236e368973285ad47d56d07b6'
 
-module.exports = function createFishEmbed(id, fishMetadata, startingPrice, paymentOption, startTime, endTime) {
+module.exports = function createFishEmbed(id, fishMetadata, startingPrice, paymentOption, usdPrice, startTime, endTime) {
   return {
     color: 0x5cc5db,
     title: `*${fishMetadata["name"]}*`,
@@ -11,7 +11,7 @@ module.exports = function createFishEmbed(id, fishMetadata, startingPrice, payme
       name: 'New Auction on Fish!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Starting price: **${startingPrice} ${paymentOption}**\n` +
+    description: `Starting price: **${startingPrice} ${paymentOption}** (${usdPrice}$)\n` +
                  `Auction started at: <t:${startTime}:f>\n` +
                  `Ending: <t:${endTime}:f> (<t:${endTime}:R>)`,
     thumbnail: {

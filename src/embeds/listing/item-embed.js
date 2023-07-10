@@ -2,7 +2,7 @@ const removeIpfsStuff = require("../../ipfs-link-tools");
 
 const ITEM_COLLECTION = '29b58a7fceecf0c84e62301e5b933416a1db0599'
 
-module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption) {
+module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption, usdPrice) {
   return {
     color: 0x1f8724,
     title: `Item *${itemMetadata["name"]}*`,
@@ -11,7 +11,7 @@ module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption
       name: 'New Item Listed!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Item listed for **${price} ${paymentOption}**`,
+    description: `Item listed for **${price} ${paymentOption}** (${usdPrice}$)`,
     thumbnail: {
       url: `https://evrloot.mypinata.cloud/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
     },

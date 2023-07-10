@@ -6,6 +6,7 @@ const createItemListingEmbed = require('./embeds/listing/item-embed')
 const createFishAuctionEmbed = require('./embeds/auction/fish-embed')
 const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
 const createItemAuctionEmbed = require('./embeds/auction/item-embed')
+const {getPriceOfRmrk, getPriceOfGlmr} = require("./fetch-prices");
 
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
@@ -35,35 +36,46 @@ async function decodeInput(input) {
     power = 18
   }
   const readablePrice = priceInGwei / Math.pow(10, power)
-  const readableStartingBidPrice = startingBidPriceInGwei / Math.pow(10, power)
+  const readableStartingBidPrice = startingBidPriceInGwei / Math.pow(10, power) + 0.00002
 
   let paymentOptionText;
+  let usdPrice;
   switch (paymentOption) {
     case RMRK_CONTRACT_ADDRESS:
       paymentOptionText = "xcRMRK";
+      readableStartingBidPrice > 0
+        ? usdPrice = await getPriceOfRmrk(readableStartingBidPrice)
+        : usdPrice = await getPriceOfRmrk(readablePrice);
       break;
     case WGLMR_CONTRACT_ADDRESS:
       paymentOptionText = "WGLMR";
+      readableStartingBidPrice > 0
+        ? usdPrice = await getPriceOfGlmr(readableStartingBidPrice)
+        : usdPrice = await getPriceOfGlmr(readablePrice);
       break;
     default:
       paymentOptionText = "[missing contract address]"
+      usdPrice = 0;
   }
+
+  usdPrice = Math.round(usdPrice * 100) / 100
+
 
   if (collection === FISH_COLLECTION) {
     const fishMetadata = await getFishMetadata(id);
     readableStartingBidPrice > 0
-      ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
-      : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText))
+      ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+      : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText, usdPrice))
   } else if (collection === SOUL_COLLECTION) {
     const soulMetadata = await getSoulMetadata(id);
     readableStartingBidPrice > 0
-      ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
-      : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText))
+      ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+      : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText, usdPrice))
   } else if (collection === ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id);
     readableStartingBidPrice > 0
-      ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
-      : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText))
+      ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+      : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText, usdPrice))
   }
 
 }

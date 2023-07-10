@@ -1,6 +1,6 @@
 const SOUL_COLLECTION = '9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
-module.exports = function createSoulEmbed(id, soulMetadata, price, paymentOption) {
+module.exports = function createSoulEmbed(id, soulMetadata, price, paymentOption, usdPrice) {
   return {
     color: 0xae1917,
     title: `Soul *${soulMetadata["name"]}*`,
@@ -9,7 +9,7 @@ module.exports = function createSoulEmbed(id, soulMetadata, price, paymentOption
       name: 'New Soul Listed!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Soul listed for **${price} ${paymentOption}**`,
+    description: `Soul listed for **${price} ${paymentOption}** (${usdPrice}$)`,
     fields: [
       {
         name: 'Stats',
