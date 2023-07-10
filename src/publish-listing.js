@@ -1,9 +1,11 @@
 const { postListing } = require('./discord-bot.js')
 const {getItemMetadata, getSoulMetadata, getFishMetadata} = require("./evrloot-ipfs");
-const createFishEmbed = require('./embeds/fish-embed')
-const createSoulEmbed = require('./embeds/soul-embed')
-const createItemEmbed = require('./embeds/item-embed')
-
+const createFishListingEmbed = require('./embeds/listing/fish-embed')
+const createSoulListingEmbed = require('./embeds/listing/soul-embed')
+const createItemListingEmbed = require('./embeds/listing/item-embed')
+const createFishAuctionEmbed = require('./embeds/auction/fish-embed')
+const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
+const createItemAuctionEmbed = require('./embeds/auction/item-embed')
 
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
@@ -17,15 +19,14 @@ module.exports = {
 }
 
 async function decodeInput(input) {
-  console.log('started decoding');
-
-  const hexId = input.substring(130, 130 + 8);
+  const id =  parseInt(input.substring(130, 130 + 8), 16);
   const collection = input.substring(482, 482 + 40)
   const paymentOption = input.substring(546, 546 + 40).toLowerCase()
-  const hexPrice = input.substring(362, 362 + 32) //price in hex rmrk: 10decimals, gmlr: 18 decimals
-
-  const id = parseInt(hexId, 16);
-  const priceInGwei = parseInt(hexPrice, 16);
+  const priceInGwei = parseInt(input.substring(362, 362 + 32), 16); //price in hex rmrk: 10decimals, gmlr: 18 decimals
+  const startingBidPriceInGwei = parseInt(input.substring(874, 874+32), 16);
+  const startTime = parseInt(input.substring(186, 186+16), 16);
+  const secondsUntilEndTime = parseInt(input.substring(258, 258+8), 16);
+  const endTime = startTime + secondsUntilEndTime;
 
   let power = 0;
   if (paymentOption === RMRK_CONTRACT_ADDRESS) {
@@ -34,6 +35,7 @@ async function decodeInput(input) {
     power = 18
   }
   const readablePrice = priceInGwei / Math.pow(10, power)
+  const readableStartingBidPrice = startingBidPriceInGwei / Math.pow(10, power)
 
   let paymentOptionText;
   switch (paymentOption) {
@@ -49,13 +51,19 @@ async function decodeInput(input) {
 
   if (collection === FISH_COLLECTION) {
     const fishMetadata = await getFishMetadata(id);
-    await postListing(createFishEmbed(id, fishMetadata, readablePrice, paymentOptionText));
+    readableStartingBidPrice > 0
+      ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
+      : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText))
   } else if (collection === SOUL_COLLECTION) {
     const soulMetadata = await getSoulMetadata(id);
-    await postListing(createSoulEmbed(id, soulMetadata, readablePrice, paymentOptionText));
+    readableStartingBidPrice > 0
+      ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
+      : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText))
   } else if (collection === ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id);
-    await postListing(createItemEmbed(id, itemMetadata, readablePrice, paymentOptionText));
+    readableStartingBidPrice > 0
+      ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, startTime, endTime))
+      : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText))
   }
 
 }

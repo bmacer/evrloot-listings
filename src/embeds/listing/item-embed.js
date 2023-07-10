@@ -1,4 +1,4 @@
-const removeIpfsStuff = require("../ipfs-link-tools");
+const removeIpfsStuff = require("../../ipfs-link-tools");
 
 const ITEM_COLLECTION = '29b58a7fceecf0c84e62301e5b933416a1db0599'
 
