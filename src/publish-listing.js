@@ -62,10 +62,10 @@ async function decodeInput(input) {
 
 
   if (collection === FISH_COLLECTION) {
-    const fishMetadata = await getFishMetadata(id);
-    readableStartingBidPrice > 0
-      ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-      : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText, usdPrice))
+    // const fishMetadata = await getFishMetadata(id);
+    // readableStartingBidPrice > 0
+    //   ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+    //   : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText, usdPrice))
   } else if (collection === SOUL_COLLECTION) {
     const soulMetadata = await getSoulMetadata(id);
     readableStartingBidPrice > 0
