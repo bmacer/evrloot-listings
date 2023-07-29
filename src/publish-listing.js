@@ -35,8 +35,8 @@ async function decodeInput(input) {
   } else if (paymentOption === WGLMR_CONTRACT_ADDRESS) {
     power = 18
   }
-  const readablePrice = priceInGwei / Math.pow(10, power)
-  const readableStartingBidPrice = startingBidPriceInGwei / Math.pow(10, power) + 0.00002
+  const readablePrice = Math.round((priceInGwei / Math.pow(10, power)) * 100) / 100
+  const readableStartingBidPrice = Math.round((startingBidPriceInGwei / Math.pow(10, power)) * 100) / 100
 
   let paymentOptionText;
   let usdPrice;
