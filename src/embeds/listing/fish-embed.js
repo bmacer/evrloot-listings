@@ -1,6 +1,6 @@
 const removeIpfsStuff = require("../../ipfs-link-tools");
 
-const FISH_COLLECTION = '95492edcc1d373e236e368973285ad47d56d07b6'
+const FISH_COLLECTION = '0x95492edcc1d373e236e368973285ad47d56d07b6'
 
 module.exports = function createFishEmbed(id, fishMetadata, price, paymentOption, usdPrice) {
   return {

@@ -1,4 +1,4 @@
-const SOUL_COLLECTION = '9d1454e198f4b601bfc0069003045b0cbc0e6749'
+const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
 module.exports = function createSoulEmbed(id, soulMetadata, price, paymentOption, usdPrice) {
   return {
