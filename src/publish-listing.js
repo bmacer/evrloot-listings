@@ -1,5 +1,5 @@
 const { postListing } = require('./discord-bot.js')
-const {getItemMetadata, getSoulMetadata, getFishMetadata} = require("./evrloot-ipfs");
+const {getItemMetadata, getSoulMetadata} = require("./evrloot-ipfs");
 const createSoulListingEmbed = require('./embeds/listing/soul-embed')
 const createItemListingEmbed = require('./embeds/listing/item-embed')
 const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
