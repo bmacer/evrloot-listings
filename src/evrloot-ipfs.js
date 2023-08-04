@@ -12,7 +12,7 @@ async function getItemMetadata(tokenId) {
   if (ipfsLink === undefined) {
     throw Error(`No IPFS Link for Item ${tokenId} found`);
   }
-  return await fetchAsync(`https://evrloot.mypinata.cloud/ipfs/${linkWithoutIpfs(ipfsLink)}`);
+  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
 }
 
 async function getSoulMetadata(tokenId) {
@@ -21,7 +21,7 @@ async function getSoulMetadata(tokenId) {
   // if (ipfsLink === undefined) {
   //   throw Error(`No IPFS Link for Item ${tokenId} found`);
   // }
-  return await fetchAsync(`https://evrloot.mypinata.cloud/ipfs/${linkWithoutIpfs(ipfsLink)}`);
+  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
 }
 
 async function getFishMetadata(tokenId) {
@@ -29,7 +29,7 @@ async function getFishMetadata(tokenId) {
   if (ipfsLink === undefined) {
     throw Error(`No IPFS Link for Item ${tokenId} found`);
   }
-  return await fetchAsync(`https://evrloot.mypinata.cloud/ipfs/${linkWithoutIpfs(ipfsLink)}`);
+  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
 }
 
 async function fetchAsync(url) {

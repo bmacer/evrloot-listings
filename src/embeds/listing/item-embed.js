@@ -13,7 +13,7 @@ module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption
     },
     description: `Item listed for **${price} ${paymentOption}** (${usdPrice}$)`,
     thumbnail: {
-      url: `https://evrloot.mypinata.cloud/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
+      url: `https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
     },
     fields: [
       {

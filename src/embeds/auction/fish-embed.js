@@ -15,7 +15,7 @@ module.exports = function createFishEmbed(id, fishMetadata, startingPrice, payme
                  `Auction started at: <t:${startTime}:f>\n` +
                  `Ending: <t:${endTime}:f> (<t:${endTime}:R>)`,
     thumbnail: {
-      url: `https://evrloot.mypinata.cloud/ipfs/${removeIpfsStuff(fishMetadata["thumbnailUri"])}`,
+      url: `https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(fishMetadata["thumbnailUri"])}`,
     },
     fields: [
       {

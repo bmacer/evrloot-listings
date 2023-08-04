@@ -15,7 +15,7 @@ module.exports = function createItemEmbed(id, itemMetadata, startingPrice, payme
                  `Auction started at: <t:${startTime}:f>\n` +
                  `Ending: <t:${endTime}:f> (<t:${endTime}:R>)`,
     thumbnail: {
-      url: `https://evrloot.mypinata.cloud/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
+      url: `https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
     },
     fields: [
       {
