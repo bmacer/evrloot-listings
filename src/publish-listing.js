@@ -28,6 +28,10 @@ async function decodeInput(input) {
   const startTime = parseInt(input.substring(186, 186+16), 16);
   const secondsUntilEndTime = parseInt(input.substring(258, 258+8), 16);
   const endTime = startTime + secondsUntilEndTime;
+  console.log('id', id)
+  console.log('collection', collection)
+  console.log('paymentOption', paymentOption)
+  console.log('priceInGwei', priceInGwei)
 
   let power = 0;
   if (paymentOption === RMRK_CONTRACT_ADDRESS) {
