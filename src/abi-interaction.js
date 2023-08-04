@@ -25,7 +25,7 @@ const CONTRACT_ADDRESS_RMRK_MARKETPLACE = '0xdF5499A17D487345e0201aCE513b26E5F42
 const RMRK_MARKETPLACE = new web3.eth.Contract(ABI_RMRK_MARKETPLACE, CONTRACT_ADDRESS_RMRK_MARKETPLACE);
 
 function setupAuctionAndSalesSubscriptions() {
-  RMRK_MARKETPLACE.events.NewSale(({fromBlock: 'latest'})
+  RMRK_MARKETPLACE.events.NewSale()
     .on("connected", function(_subscriptionId){
       console.log('connected to contract for new sales!');
     })
@@ -35,7 +35,6 @@ function setupAuctionAndSalesSubscriptions() {
     .on('error', function(error, receipt) {
       console.log('Error:', error, receipt);
     })
-  );
 }
 async function getIpfsLinkForItem(tokenId) {
   const activeAssetsForTokenId = await EVRLOOT_ITEMS.methods.getActiveAssets(tokenId).call();

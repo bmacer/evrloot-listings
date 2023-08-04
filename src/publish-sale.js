@@ -32,22 +32,17 @@ async function publishSale(event) {
         power = 18
     }
     const readablePrice = Math.round((priceInGwei / Math.pow(10, power)) * 100) / 100
-    const readableStartingBidPrice = Math.round((startingBidPriceInGwei / Math.pow(10, power)) * 100) / 100
 
     let paymentOptionText;
     let usdPrice;
     switch (paymentOption) {
         case RMRK_CONTRACT_ADDRESS:
             paymentOptionText = "xcRMRK";
-            readableStartingBidPrice > 0
-                ? usdPrice = await getPriceOfRmrk(readableStartingBidPrice)
-                : usdPrice = await getPriceOfRmrk(readablePrice);
+            usdPrice = await getPriceOfRmrk(readablePrice);
             break;
         case WGLMR_CONTRACT_ADDRESS:
             paymentOptionText = "WGLMR";
-            readableStartingBidPrice > 0
-                ? usdPrice = await getPriceOfGlmr(readableStartingBidPrice)
-                : usdPrice = await getPriceOfGlmr(readablePrice);
+            usdPrice = await getPriceOfGlmr(readablePrice);
             break;
         default:
             paymentOptionText = "[missing contract address]"
@@ -56,22 +51,12 @@ async function publishSale(event) {
 
     usdPrice = Math.round(usdPrice * 100) / 100
 
-
-    if (collection === FISH_COLLECTION) {
-        // const fishMetadata = await getFishMetadata(id);
-        // readableStartingBidPrice > 0
-        //   ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-        //   : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText, usdPrice))
-    } else if (collection === SOUL_COLLECTION) {
+    if (collection === SOUL_COLLECTION) {
         const soulMetadata = await getSoulMetadata(id);
-        readableStartingBidPrice > 0
-            ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-            : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText, usdPrice))
+        await postListing(createSoulSalesEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
     } else if (collection === ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id);
-        readableStartingBidPrice > 0
-            ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-            : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText, usdPrice))
+        postListing(createItemSalesEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
     }
 
 }
