@@ -2,16 +2,18 @@ const removeIpfsStuff = require("../../ipfs-link-tools");
 
 const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
 
-module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption, usdPrice) {
+module.exports = function createItemEmbed(id, itemMetadata, paymentOption, usdPrice, startTime, endTime) {
   return {
     color: 0x1f8724,
     title: `Item *${itemMetadata["name"]}*`,
     url: `https://singular.app/collectibles/moonbeam/${ITEM_COLLECTION}/${id}`,
     author: {
-      name: 'Item sold!',
+      name: 'New Auction on Item!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Item sold for **${price} ${paymentOption}** (${usdPrice}$)`,
+    description: `Starting price: **${startingPrice} ${paymentOption} (${usdPrice}$)**\n` +
+                 `Auction started at: <t:${startTime}:f>\n` +
+                 `Ending: <t:${endTime}:f> (<t:${endTime}:R>)`,
     thumbnail: {
       url: `https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
     },

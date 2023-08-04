@@ -35,6 +35,17 @@ function setupAuctionAndSalesSubscriptions() {
     .on('error', function(error, receipt) {
       console.log('Error:', error, receipt);
     })
+
+  RMRK_MARKETPLACE.events.NewBid()
+    .on("connected", function(_subscriptionId){
+      console.log('connected to contract for new bids!');
+    })
+    .on('data', function(event){
+      publishSale(event)
+    })
+    .on('error', function(error, receipt) {
+      console.log('Error:', error, receipt);
+    })
 }
 async function getIpfsLinkForItem(tokenId) {
   const activeAssetsForTokenId = await EVRLOOT_ITEMS.methods.getActiveAssets(tokenId).call();
