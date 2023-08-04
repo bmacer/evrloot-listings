@@ -1,6 +1,8 @@
 const web3 = require("./web3");
+const {publishSale} = require('./publish-sale')
 
 module.exports = {
+  setupAuctionAndSalesSubscriptions,
   getIpfsLinkForItem,
   getIpfsLinkForSoul,
   getIpfsLinkForFish
@@ -18,6 +20,23 @@ const ABI_EVRLOOT_FISH = require('./abi/ABI_EVRLOOT_FISH.json');
 const CONTRACT_ADDRESS_EVRLOOT_FISH = '0x95492edcc1d373e236e368973285ad47d56d07b6';
 const EVRLOOT_FISH = new web3.eth.Contract(ABI_EVRLOOT_FISH, CONTRACT_ADDRESS_EVRLOOT_FISH);
 
+const ABI_RMRK_MARKETPLACE = require('./abi/ABI_RMRK_MARKETPLACE.json');
+const CONTRACT_ADDRESS_RMRK_MARKETPLACE = '0xdF5499A17D487345e0201aCE513b26E5F427A717';
+const RMRK_MARKETPLACE = new web3.eth.Contract(ABI_RMRK_MARKETPLACE, CONTRACT_ADDRESS_RMRK_MARKETPLACE);
+
+function setupAuctionAndSalesSubscriptions() {
+  RMRK_MARKETPLACE.events.NewSale(({fromBlock: 'latest'})
+    .on("connected", function(_subscriptionId){
+      console.log('connected to contract for new sales!');
+    })
+    .on('data', function(event){
+      publishSale(event)
+    })
+    .on('error', function(error, receipt) {
+      console.log('Error:', error, receipt);
+    })
+  );
+}
 async function getIpfsLinkForItem(tokenId) {
   const activeAssetsForTokenId = await EVRLOOT_ITEMS.methods.getActiveAssets(tokenId).call();
 

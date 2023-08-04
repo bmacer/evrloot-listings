@@ -11,14 +11,15 @@ const SOUL_COLLECTION = '9d1454e198f4b601bfc0069003045b0cbc0e6749'
 const ITEM_COLLECTION = '29b58a7fceecf0c84e62301e5b933416a1db0599'
 
 module.exports = {
-    decodeInput
+    publishSale
 }
 
-async function decodeInput(input) {
-    const id = parseInt(input.substring(130, 130 + 8), 16);
-    const collection = input.substring(482, 482 + 40)
-    const paymentOption = input.substring(226, 226 + 40).toLowerCase()
-    const priceInGwei = parseInt(input.substring(298, 298 + 32), 16); //price in hex rmrk: 10decimals, gmlr: 18 decimals
+async function publishSale(event) {
+    console.log('publish direct sale')
+    const id = event.returnValues.tokenId;
+    const collection = event.returnValues.tokenAddress;
+    const paymentOption = event.returnValues.currency;
+    const priceInGwei = event.returnValues.totalPricePaid //price in hex rmrk: 10decimals, gmlr: 18 decimals
     console.log('id', id)
     console.log('collection', collection)
     console.log('paymentOption', paymentOption)

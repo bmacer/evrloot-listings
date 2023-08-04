@@ -1,9 +1,7 @@
 const { postListing } = require('./discord-bot.js')
 const {getItemMetadata, getSoulMetadata, getFishMetadata} = require("./evrloot-ipfs");
-const createFishListingEmbed = require('./embeds/listing/fish-embed')
 const createSoulListingEmbed = require('./embeds/listing/soul-embed')
 const createItemListingEmbed = require('./embeds/listing/item-embed')
-const createFishAuctionEmbed = require('./embeds/auction/fish-embed')
 const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
 const createItemAuctionEmbed = require('./embeds/auction/item-embed')
 const {getPriceOfRmrk, getPriceOfGlmr} = require("./fetch-prices");
@@ -20,6 +18,7 @@ module.exports = {
 }
 
 async function decodeInput(input) {
+  console.log('started decoding listing')
   const id =  parseInt(input.substring(130, 130 + 8), 16);
   const collection = input.substring(482, 482 + 40)
   const paymentOption = input.substring(546, 546 + 40).toLowerCase()
