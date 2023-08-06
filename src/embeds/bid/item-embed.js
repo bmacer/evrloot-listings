@@ -4,7 +4,7 @@ const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
 
 module.exports = function createItemEmbed(id, itemMetadata, paymentOption, usdPrice, startTime, endTime) {
   return {
-    color: 0x1f8724,
+    color: colorForRarity(itemMetadata.attributes.find(m => m.label === 'Rarity')),
     title: `Item *${itemMetadata["name"]}*`,
     url: `https://singular.app/collectibles/moonbeam/${ITEM_COLLECTION}/${id}`,
     author: {
@@ -78,4 +78,20 @@ function itemStatsFormatter(attributes) {
 
 function searchAttr(attributes, attributeName) {
   return attributes.find(attr => attr["label"] === attributeName)
+}
+
+function colorForRarity(rarityMetadata) {
+  const rarity = rarityMetadata.value;
+
+  if (rarity === 'Legendary') {
+    return 0xF4B01E
+  } else if (rarity === 'Epic') {
+    return 0xC12FE2
+  } else if (rarity === 'Rare') {
+    return 0x34E0F5
+  } else if (rarity === 'Common') {
+    return 0xD2D2D2
+  } else {
+    return 0xFF0000
+  }
 }
