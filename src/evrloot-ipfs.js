@@ -1,10 +1,9 @@
-const {getIpfsLinkForItem, getIpfsLinkForSoul, getIpfsLinkForFish} = require("./abi-interaction");
+const {getIpfsLinkForItem, getIpfsLinkForSoul} = require("./abi-interaction");
 const linkWithoutIpfs = require("./ipfs-link-tools")
 
 module.exports = {
   getItemMetadata,
-  getSoulMetadata,
-  getFishMetadata
+  getSoulMetadata
 }
 
 async function getItemMetadata(tokenId) {
@@ -24,13 +23,6 @@ async function getSoulMetadata(tokenId) {
   return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
 }
 
-async function getFishMetadata(tokenId) {
-  const ipfsLink = await getIpfsLinkForFish(tokenId);
-  if (ipfsLink === undefined) {
-    throw Error(`No IPFS Link for Item ${tokenId} found`);
-  }
-  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
-}
 
 async function fetchAsync(url) {
   return fetch(url).then(response => {

@@ -9,7 +9,6 @@ const {getPriceOfRmrk, getPriceOfGlmr} = require("./fetch-prices");
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
 
-const FISH_COLLECTION = '95492edcc1d373e236e368973285ad47d56d07b6'
 const SOUL_COLLECTION = '9d1454e198f4b601bfc0069003045b0cbc0e6749'
 const ITEM_COLLECTION = '29b58a7fceecf0c84e62301e5b933416a1db0599'
 
@@ -64,12 +63,7 @@ async function decodeInput(input) {
   usdPrice = Math.round(usdPrice * 100) / 100
 
 
-  if (collection === FISH_COLLECTION) {
-    // const fishMetadata = await getFishMetadata(id);
-    // readableStartingBidPrice > 0
-    //   ? await postListing(createFishAuctionEmbed(id, fishMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-    //   : await postListing(createFishListingEmbed(id, fishMetadata, readablePrice, paymentOptionText, usdPrice))
-  } else if (collection === SOUL_COLLECTION) {
+  if (collection === SOUL_COLLECTION) {
     const soulMetadata = await getSoulMetadata(id);
     readableStartingBidPrice > 0
       ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))

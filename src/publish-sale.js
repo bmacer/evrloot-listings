@@ -16,7 +16,7 @@ module.exports = {
 
 async function publishSale(event) {
     console.log('publish direct sale')
-    console.loh('event', event)
+    console.log('event', event)
     const id = event.returnValues.tokenId;
     const collection = event.returnValues.tokenAddress;
     const paymentOption = event.returnValues.currency;
