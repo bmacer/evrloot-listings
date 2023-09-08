@@ -11,7 +11,7 @@ module.exports = function createItemEmbed(id, itemMetadata, prices) {
       name: 'Item sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Item sold for:\n`+
+    description: `Item sold for **either**:\n`+
       `- **${prices.rmrk} $RMRK** (${prices.rmrkUsd}$) **OR**\n` +
       `- **${prices.glmr} $WGLMR** (${prices.glmrUsd}$)`,
     thumbnail: {

@@ -6,6 +6,7 @@ const { getPriceOfRmrk, getPriceOfGlmr } = require("./fetch-prices");
 
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
+const CRAFTED_ITEM_COLLECTION = '0x2931b4e6e75293f8e94e893ce7bdfab5521f3fcd'
 
 module.exports = {
     publishSale
@@ -13,9 +14,8 @@ module.exports = {
 
 async function publishSale(event) {
     console.log('publish direct sale')
-    console.log('event', event)
     const id = event.returnValues.tokenId;
-    const collection = event.returnValues.tokenAddress;
+    const collection = event.returnValues.tokenAddress.toLowerCase();
     //const paymentOption = event.returnValues.currency;
     const priceInGwei = event.returnValues.totalPricePaid //price in hex rmrk: 10decimals, gmlr: 18 decimals
     console.log('id', id)
@@ -38,10 +38,11 @@ async function publishSale(event) {
         glmrUsd: usdPriceInGlmr
     }
 
+
     if (collection === SOUL_COLLECTION) {
         const soulMetadata = await getSoulMetadata(id);
         await postListing(createSoulSalesEmbed(id, soulMetadata, prices))
-    } else if (collection === ITEM_COLLECTION) {
+    } else if (collection === ITEM_COLLECTION || collection === CRAFTED_ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id);
         await postListing(createItemSalesEmbed(id, itemMetadata, prices))
     }

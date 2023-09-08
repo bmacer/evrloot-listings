@@ -2,7 +2,8 @@ require('dotenv').config();
 const { setupDiscordBot } = require("./discord-bot.js");
 const web3 = require("./web3.js");
 const {decodeInput} = require("./publish-listing");
-const {setupAuctionAndSalesSubscriptions} = require("./abi-interaction")
+const {RMRK_MARKETPLACE} = require("./abi-interaction")
+const {publishSale} = require("./publish-sale");
 
 setupDiscordBot();
 
@@ -21,8 +22,24 @@ web3.eth.subscribe('logs', {
   })
 })
 
-setupAuctionAndSalesSubscriptions()
+RMRK_MARKETPLACE.events.NewSale({fromBlock: 'latest'})
+  .on("connected", function(_subscriptionId){
+    console.log('connected to contract for new sales!');
+  })
+  .on('data', function(event){
+    publishSale(event)
+  })
+  .on('error', function(error, receipt) {
+    console.log('Error:', error, receipt);
+  })
 
-
-
-
+RMRK_MARKETPLACE.events.NewBid({fromBlock: 'latest'})
+  .on("connected", function(_subscriptionId){
+    console.log('connected to contract for new bids!');
+  })
+  .on('data', function(event){
+    publishSale(event)
+  })
+  .on('error', function(error, receipt) {
+    console.log('Error:', error, receipt);
+  })

@@ -11,6 +11,7 @@ const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
 
 const SOUL_COLLECTION = '9d1454e198f4b601bfc0069003045b0cbc0e6749'
 const ITEM_COLLECTION = '29b58a7fceecf0c84e62301e5b933416a1db0599'
+const CRAFTED_ITEM_COLLECTION = '2931b4e6e75293f8e94e893ce7bdfab5521f3fcd'
 
 module.exports = {
   decodeInput
@@ -68,7 +69,7 @@ async function decodeInput(input) {
     readableStartingBidPrice > 0
       ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
       : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText, usdPrice))
-  } else if (collection === ITEM_COLLECTION) {
+  } else if (collection === ITEM_COLLECTION || collection === CRAFTED_ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id);
     readableStartingBidPrice > 0
       ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
