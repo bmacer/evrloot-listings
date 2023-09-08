@@ -7,7 +7,7 @@ module.exports = {
 }
 
 async function getItemMetadata(tokenId, isCrafted) {
-  let ipfsLink = isCrafted ? await getIpfsLinkForItem(tokenId) : await getIpfsLinkForCraftedItem(tokenId);
+  let ipfsLink = isCrafted ? await getIpfsLinkForCraftedItem(tokenId) : await getIpfsLinkForItem(tokenId);
   if (ipfsLink === undefined) {
     throw Error(`No IPFS Link for Item ${tokenId} found`);
   }

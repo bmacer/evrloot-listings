@@ -44,10 +44,10 @@ async function publishSale(event) {
         await postListing(createSoulSalesEmbed(id, soulMetadata, prices))
     } else if (collection === ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id, false);
-        await postListing(createItemSalesEmbed(id, itemMetadata, prices))
+        await postListing(createItemSalesEmbed(id, itemMetadata, false, prices))
     } else if (collection === CRAFTED_ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id, true);
-        await postListing(createItemSalesEmbed(id, itemMetadata, prices))
+        await postListing(createItemSalesEmbed(id, itemMetadata, true, prices))
     }
 
 }

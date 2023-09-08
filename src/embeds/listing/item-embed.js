@@ -1,12 +1,13 @@
 const removeIpfsStuff = require("../../ipfs-link-tools");
 
 const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
+const CRAFTED_ITEM_COLLECTION = '0x2931b4e6e75293f8e94e893ce7bdfab5521f3fcd'
 
-module.exports = function createItemEmbed(id, itemMetadata, price, paymentOption, usdPrice) {
+module.exports = function createItemEmbed(id, itemMetadata, isCrafted, price, paymentOption, usdPrice) {
   return {
     color: colorForRarity(itemMetadata.attributes.find(m => m.label === 'Rarity')),
     title: `Item *${itemMetadata["name"]}*`,
-    url: `https://singular.app/collectibles/moonbeam/${ITEM_COLLECTION}/${id}`,
+    url: `https://singular.app/collectibles/moonbeam/${isCrafted ? CRAFTED_ITEM_COLLECTION : ITEM_COLLECTION}/${id}`,
     author: {
       name: 'New Item Listed!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
