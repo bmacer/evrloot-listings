@@ -42,8 +42,11 @@ async function publishSale(event) {
     if (collection === SOUL_COLLECTION) {
         const soulMetadata = await getSoulMetadata(id);
         await postListing(createSoulSalesEmbed(id, soulMetadata, prices))
-    } else if (collection === ITEM_COLLECTION || collection === CRAFTED_ITEM_COLLECTION) {
-        const itemMetadata = await getItemMetadata(id);
+    } else if (collection === ITEM_COLLECTION) {
+        const itemMetadata = await getItemMetadata(id, false);
+        await postListing(createItemSalesEmbed(id, itemMetadata, prices))
+    } else if (collection === CRAFTED_ITEM_COLLECTION) {
+        const itemMetadata = await getItemMetadata(id, true);
         await postListing(createItemSalesEmbed(id, itemMetadata, prices))
     }
 

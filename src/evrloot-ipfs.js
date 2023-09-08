@@ -1,4 +1,4 @@
-const {getIpfsLinkForItem, getIpfsLinkForSoul} = require("./abi-interaction");
+const {getIpfsLinkForItem, getIpfsLinkForSoul, getIpfsLinkForCraftedItem} = require("./abi-interaction");
 const linkWithoutIpfs = require("./ipfs-link-tools")
 
 module.exports = {
@@ -6,8 +6,8 @@ module.exports = {
   getSoulMetadata
 }
 
-async function getItemMetadata(tokenId) {
-  let ipfsLink = await getIpfsLinkForItem(tokenId);
+async function getItemMetadata(tokenId, isCrafted) {
+  let ipfsLink = isCrafted ? await getIpfsLinkForItem(tokenId) : await getIpfsLinkForCraftedItem(tokenId);
   if (ipfsLink === undefined) {
     throw Error(`No IPFS Link for Item ${tokenId} found`);
   }

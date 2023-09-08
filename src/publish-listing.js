@@ -69,8 +69,13 @@ async function decodeInput(input) {
     readableStartingBidPrice > 0
       ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
       : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText, usdPrice))
-  } else if (collection === ITEM_COLLECTION || collection === CRAFTED_ITEM_COLLECTION) {
-    const itemMetadata = await getItemMetadata(id);
+  } else if (collection === ITEM_COLLECTION) {
+    const itemMetadata = await getItemMetadata(id, false);
+    readableStartingBidPrice > 0
+      ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+      : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText, usdPrice))
+  } else if (collection === CRAFTED_ITEM_COLLECTION) {
+    const itemMetadata = await getItemMetadata(id, true);
     readableStartingBidPrice > 0
       ? await postListing(createItemAuctionEmbed(id, itemMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
       : await postListing(createItemListingEmbed(id, itemMetadata, readablePrice, paymentOptionText, usdPrice))

@@ -4,6 +4,10 @@ const ABI_EVRLOOT_ITEMS = require('./abi/ABI_EVRLOOT_ITEMS.json');
 const CONTRACT_ADDRESS_EVRLOOT_ITEMS = '0x29b58A7fCeecF0C84e62301E5b933416a1DB0599';
 const EVRLOOT_ITEMS = new web3.eth.Contract(ABI_EVRLOOT_ITEMS, CONTRACT_ADDRESS_EVRLOOT_ITEMS);
 
+const ABI_EVRLOOT_CRAFTED_ITEMS = require('./abi/ABI_EVRLOOT_ITEMS.json');
+const CONTRACT_ADDRESS_EVRLOOT_CRAFTED_ITEMS = '0x2931b4e6e75293f8e94e893ce7bdfab5521f3fcd';
+const EVRLOOT_CRAFTED_ITEMS = new web3.eth.Contract(ABI_EVRLOOT_CRAFTED_ITEMS, CONTRACT_ADDRESS_EVRLOOT_CRAFTED_ITEMS);
+
 const ABI_EVRLOOT_SOULS = require('./abi/ABI_EVRLOOT_SOULS.json');
 const CONTRACT_ADDRESS_EVRLOOT_SOULS = '0x9D1454e198F4b601BfC0069003045b0CBC0e6749';
 const EVRLOOT_SOULS = new web3.eth.Contract(ABI_EVRLOOT_SOULS, CONTRACT_ADDRESS_EVRLOOT_SOULS);
@@ -15,6 +19,7 @@ const RMRK_MARKETPLACE = new web3.eth.Contract(ABI_RMRK_MARKETPLACE, CONTRACT_AD
 module.exports = {
   RMRK_MARKETPLACE,
   getIpfsLinkForItem,
+  getIpfsLinkForCraftedItem,
   getIpfsLinkForSoul
 }
 async function getIpfsLinkForItem(tokenId) {
@@ -22,6 +27,16 @@ async function getIpfsLinkForItem(tokenId) {
 
   if (activeAssetsForTokenId.length > 0) {
     return await EVRLOOT_ITEMS.methods.getAssetMetadata(tokenId, activeAssetsForTokenId[0]).call();
+  }
+
+  return undefined;
+}
+
+async function getIpfsLinkForCraftedItem(tokenId) {
+  const activeAssetsForTokenId = await EVRLOOT_CRAFTED_ITEMS.methods.getActiveAssets(tokenId).call();
+
+  if (activeAssetsForTokenId.length > 0) {
+    return await EVRLOOT_CRAFTED_ITEMS.methods.getAssetMetadata(tokenId, activeAssetsForTokenId[0]).call();
   }
 
   return undefined;
