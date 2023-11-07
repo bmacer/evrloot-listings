@@ -9,7 +9,7 @@ module.exports = function createSoulEmbed(id, soulMetadata, prices) {
       name: 'Soul sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `Soul sold for **either**:\n`+
+    description: `# Soul sold!\nSoul sold for **either**:\n`+
                  `- **${prices.rmrk} $RMRK** (${prices.rmrkUsd}$) **OR**\n` +
                  `- **${prices.glmr} $WGLMR** (${prices.glmrUsd}$)`,
     fields: [
