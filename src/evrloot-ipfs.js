@@ -3,7 +3,8 @@ const linkWithoutIpfs = require("./ipfs-link-tools")
 
 module.exports = {
   getItemMetadata,
-  getSoulMetadata
+  getSoulMetadata,
+  getSoulChildrenMetadata
 }
 
 async function getItemMetadata(tokenId, isCrafted) {
@@ -14,15 +15,34 @@ async function getItemMetadata(tokenId, isCrafted) {
   return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
 }
 
-async function getSoulMetadata(tokenId) {
-  const ipfsLink = await getIpfsLinkForSoul(tokenId);
-  // no idea what happens when the ipfs soul link is not found with the Contract, but that shouldn't happen eitherway
-  // if (ipfsLink === undefined) {
-  //   throw Error(`No IPFS Link for Item ${tokenId} found`);
-  // }
-  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${linkWithoutIpfs(ipfsLink)}`);
+async function getSoulMetadata(soulId) {
+  const soul = await fetchAsync(`https://api.evrloot.xyz/api/evmnfts/EVR-SOULS-${soulId}`);
+  return await mapMetadataToSoul(soul, soulId);
 }
 
+async function mapMetadataToSoul(soul, soulId) {
+  const soulMetadataLink = await getIpfsLinkForSoul(soulId);
+  const soulMetadata = await getFromIpfs(soulMetadataLink);
+  return {...soul, retrievedMetadata: soulMetadata}
+}
+
+async function getSoulChildrenMetadata(children) {
+  const childrenWithMetadata = children.map(child => getFromIpfs(child.metadataUri));
+
+  return Promise.all(childrenWithMetadata)
+}
+
+async function getFromIpfs(ipfsLink) {
+  return await fetchAsync(`https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(ipfsLink)}`);
+}
+
+function removeIpfsStuff(ipfsLink) {
+  let linkWithoutIpfs = ipfsLink.replace("ipfs://", "");
+  if (linkWithoutIpfs.startsWith("ipfs/")) {
+    linkWithoutIpfs = linkWithoutIpfs.replace("ipfs/", "");
+  }
+  return linkWithoutIpfs
+}
 
 async function fetchAsync(url) {
   return fetch(url).then(response => {

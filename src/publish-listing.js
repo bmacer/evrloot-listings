@@ -1,5 +1,5 @@
 const { postListing } = require('./discord-bot.js')
-const {getItemMetadata, getSoulMetadata} = require("./evrloot-ipfs");
+const {getItemMetadata, getSoulMetadata, getSoulChildrenMetadata} = require("./evrloot-ipfs");
 const createSoulListingEmbed = require('./embeds/listing/soul-embed')
 const createItemListingEmbed = require('./embeds/listing/item-embed')
 const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
@@ -65,10 +65,11 @@ async function decodeInput(input) {
 
 
   if (collection === SOUL_COLLECTION) {
-    const soulMetadata = await getSoulMetadata(id);
+    const soul = await getSoulMetadata(id);
+    const soulChildren = await getSoulChildrenMetadata(soul.children);
     readableStartingBidPrice > 0
-      ? await postListing(createSoulAuctionEmbed(id, soulMetadata, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-      : await postListing(createSoulListingEmbed(id, soulMetadata, readablePrice, paymentOptionText, usdPrice))
+      ? await postListing(createSoulAuctionEmbed(soul, soulChildren, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
+      : await postListing(createSoulListingEmbed(soul, soulChildren, readablePrice, paymentOptionText, usdPrice))
   } else if (collection === ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id, false);
     readableStartingBidPrice > 0

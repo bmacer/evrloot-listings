@@ -1,9 +1,9 @@
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
-module.exports = function createSoulEmbed(id, soulMetadata, prices) {
+module.exports = function createSoulEmbed(soul, soulChildren, prices) {
   return {
     color: 0xae1917,
-    title: `Soul *${soulMetadata["name"]}*`,
+    title: `Soul *${soul.retrievedMetadata.name}*`,
     url: `https://singular.app/collectibles/moonbeam/${SOUL_COLLECTION}/${id}`,
     author: {
       name: 'Soul sold!',
@@ -15,12 +15,22 @@ module.exports = function createSoulEmbed(id, soulMetadata, prices) {
     fields: [
       {
         name: 'Stats',
-        value: soulStatsFormatter(soulMetadata["attributes"]),
+        value: soulStatsFormatter(soul.retrievedMetadata.attributes),
         inline: true
       },
       {
         name: 'Attributes',
-        value: soulAttrFormatter(soulMetadata["attributes"]),
+        value: soulAttrFormatter(soul.retrievedMetadata.attributes),
+        inline: true
+      },
+      {
+        name: 'Experience',
+        value: soulExperienceFormatter(soul.experience.activities),
+        inline: true
+      },
+      {
+        name: 'Children',
+        value: soulChildsFormatter(soulChildren),
         inline: true
       }
     ],
@@ -63,6 +73,45 @@ function soulStatsFormatter(attributes) {
   returnString += `*Luck*: ${luck["value"]}\n`;
 
   return returnString;
+}
+
+const shownExperiences = [1, 2, 3, 4, 6, 7]
+function soulExperienceFormatter(experiences) {
+  const expStrings = experiences
+    .filter(exp => shownExperiences.includes(exp.activityId))
+    .map(getExpString)
+
+  let returnString = '';
+
+  expStrings.forEach(expString => returnString += expString)
+
+  return returnString;
+}
+
+function getExpString(exp) {
+  return `*${exp.activityName}*: ${exp.experience}\n`
+}
+
+function soulChildsFormatter(childrenMetadata) {
+  let returnString = '';
+  childrenMetadata
+    .sort(raritySorter)
+    .forEach(child => returnString += `[${searchAttr(child.attributes, "Rarity").value}] *${child.name}*\n`)
+
+  return returnString;
+}
+
+const raritySortValue = new Map([
+  ['Common', 0],
+  ['Rare', 1],
+  ['Epic', 2],
+  ['Legendary', 3],
+])
+function raritySorter(entryA, entryB) {
+  const rarityA = searchAttr(entryA.attributes, "Rarity").value;
+  const rarityB = searchAttr(entryB.attributes, "Rarity").value;
+
+  return raritySortValue.get(rarityA) - raritySortValue.get(rarityB)
 }
 
 function searchAttr(attributes, attributeName) {

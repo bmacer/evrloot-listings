@@ -1,5 +1,5 @@
 const { postListing } = require('./discord-bot.js')
-const { getItemMetadata, getSoulMetadata } = require("./evrloot-ipfs");
+const { getItemMetadata, getSoulMetadata, getSoulChildrenMetadata} = require("./evrloot-ipfs");
 const createSoulSalesEmbed = require('./embeds/sales/soul-embed')
 const createItemSalesEmbed = require('./embeds/sales/item-embed')
 const { getPriceOfRmrk, getPriceOfGlmr } = require("./fetch-prices");
@@ -40,8 +40,9 @@ async function publishSale(event) {
 
 
     if (collection === SOUL_COLLECTION) {
-        const soulMetadata = await getSoulMetadata(id);
-        await postListing(createSoulSalesEmbed(id, soulMetadata, prices))
+        const soul = await getSoulMetadata(id);
+        const soulChildren = await getSoulChildrenMetadata(soul.children);
+        await postListing(createSoulSalesEmbed(soul, soulChildren, prices))
     } else if (collection === ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id, false);
         await postListing(createItemSalesEmbed(id, itemMetadata, false, prices))
