@@ -4,7 +4,7 @@ module.exports = function createSoulEmbed(soul, soulChildren, prices) {
   return {
     color: 0xae1917,
     title: `Soul *${soul.retrievedMetadata.name}*`,
-    url: `https://singular.app/collectibles/moonbeam/${SOUL_COLLECTION}/${id}`,
+    url: `https://singular.app/collectibles/moonbeam/${SOUL_COLLECTION}/${soul.tokenId}`,
     author: {
       name: 'Soul sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
