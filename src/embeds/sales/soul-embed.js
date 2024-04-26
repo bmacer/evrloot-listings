@@ -1,6 +1,10 @@
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
 module.exports = function createSoulEmbed(soul, soulChildren, prices) {
+  const priceDescription = prices.glmr > 0 ?
+    `**${prices.glmr} $WGLMR** (${prices.glmrUsd}$)` :
+    `**${prices.rmrk} $RMRK** (${prices.rmrkUsd}$)`
+
   return {
     color: 0xae1917,
     title: `Soul *${soul.retrievedMetadata.name}*`,
@@ -9,9 +13,7 @@ module.exports = function createSoulEmbed(soul, soulChildren, prices) {
       name: 'Soul sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `# Soul sold!\nSoul sold for **either**:\n`+
-                 `- **${prices.rmrk} $RMRK** (${prices.rmrkUsd}$) **OR**\n` +
-                 `- **${prices.glmr} $WGLMR** (${prices.glmrUsd}$)`,
+    description: `# Soul sold!\nSoul sold for ${priceDescription}`,
     fields: [
       {
         name: 'Stats',

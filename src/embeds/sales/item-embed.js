@@ -4,6 +4,10 @@ const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
 const CRAFTED_ITEM_COLLECTION = '0x2931b4e6e75293f8e94e893ce7bdfab5521f3fcd'
 
 module.exports = function createItemEmbed(id, itemMetadata, isCrafted, prices) {
+  const priceDescription = prices.glmr > 0 ?
+    `**${prices.glmr} $WGLMR** (${prices.glmrUsd}$)` :
+    `**${prices.rmrk} $RMRK** (${prices.rmrkUsd}$)`
+
   return {
     color: colorForRarity(itemMetadata.attributes.find(m => m.label === 'Rarity')),
     title: `Item *${itemMetadata["name"]}*`,
@@ -12,9 +16,7 @@ module.exports = function createItemEmbed(id, itemMetadata, isCrafted, prices) {
       name: 'Item sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
-    description: `# Item sold!\nItem sold for **either**:\n`+
-      `- **${prices.rmrk} $RMRK** (${prices.rmrkUsd}$) **OR**\n` +
-      `- **${prices.glmr} $WGLMR** (${prices.glmrUsd}$)`,
+    description: `# Item sold!\nItem sold for ${priceDescription}`,
     thumbnail: {
       url: `https://evrloot.myfilebase.com/ipfs/${removeIpfsStuff(itemMetadata["image"])}`,
     },
