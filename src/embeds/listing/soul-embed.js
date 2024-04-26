@@ -24,11 +24,11 @@ module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOpti
         value: soulAttrFormatter(soul.retrievedMetadata.attributes),
         inline: true
       },
-      // {
-      //   name: 'Experience',
-      //   value: soulExperienceFormatter(soul.experience.activities),
-      //   inline: true
-      // },
+      {
+        name: 'Experience',
+        value: soulExperienceFormatter(soul.experience.activities),
+        inline: true
+      },
       {
         name: 'Children',
         value: soulChildsFormatter(soulChildren),
@@ -76,23 +76,23 @@ function soulStatsFormatter(attributes) {
   return returnString;
 }
 
-// const shownExperiences = [1, 2, 3, 4, 6, 7]
-// function soulExperienceFormatter(experiences) {
-//   console.log(experiences)
-//   const expStrings = experiences
-//     .filter(exp => shownExperiences.includes(exp.activityId))
-//     .map(getExpString)
-//
-//   let returnString = '';
-//
-//   expStrings.forEach(expString => returnString += expString)
-//
-//   return returnString;
-// }
+const shownExperiences = [1, 2, 3, 4, 6, 7]
+function soulExperienceFormatter(experiences) {
+  console.log(experiences)
+  const expStrings = experiences
+    .filter(exp => shownExperiences.includes(exp.activityId))
+    .map(getExpString)
 
-// function getExpString(exp) {
-//   return `*${exp.activityName}*: ${exp.experience}\n`
-// }
+  let returnString = '';
+
+  expStrings.forEach(expString => returnString += expString)
+
+  return returnString;
+}
+
+function getExpString(exp) {
+  return `*${exp.activityName}*: ${exp.experience}\n`
+}
 
 function soulChildsFormatter(childrenMetadata) {
   let returnString = '';
