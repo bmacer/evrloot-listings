@@ -1,8 +1,11 @@
 const { postListing } = require('./discord-bot.js')
-const { getItemMetadata, getSoulMetadata, getSoulChildrenMetadata} = require("./evrloot-ipfs");
+const { getItemMetadata, getSoulMetadata, getSoulChildrenMetadata, getSoulImage} = require("./evrloot-ipfs");
 const createSoulSalesEmbed = require('./embeds/sales/soul-embed')
 const createItemSalesEmbed = require('./embeds/sales/item-embed')
 const { getPriceOfRmrk, getPriceOfGlmr } = require("./fetch-prices");
+const fs = require("fs");
+const {AttachmentBuilder} = require("discord.js");
+const {postListingWithImage} = require("./discord-bot");
 
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 const ITEM_COLLECTION = '0x29b58a7fceecf0c84e62301e5b933416a1db0599'
@@ -38,11 +41,29 @@ async function publishSale(event) {
         glmrUsd: usdPriceInGlmr
     }
 
-
     if (collection === SOUL_COLLECTION) {
         const soul = await getSoulMetadata(id);
         const soulChildren = await getSoulChildrenMetadata(soul.children);
-        await postListing(createSoulSalesEmbed(soul, soulChildren, prices))
+
+        const soulImageBuffer = await getSoulImage(id)
+        const imageFileName = `soul_${id}.png`;
+        let path = 'static/'+imageFileName;
+        fs.createWriteStream(path).write(soulImageBuffer);
+        fs.createWriteStream(path).close();
+
+        const attachments = new AttachmentBuilder()
+          .setFile(path)
+          .setName(imageFileName)
+
+        await postListingWithImage(createSoulSalesEmbed(soul, soulChildren, prices), attachments)
+
+        fs.unlink(path, (err) => {
+            if (err) {
+                console.error('Error removing file:', err);
+                return;
+            }
+            console.log('File removed successfully:', path);
+        });
     } else if (collection === ITEM_COLLECTION) {
         const itemMetadata = await getItemMetadata(id, false);
         await postListing(createItemSalesEmbed(id, itemMetadata, false, prices))

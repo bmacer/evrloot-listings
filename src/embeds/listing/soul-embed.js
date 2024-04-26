@@ -1,6 +1,6 @@
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
-module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOption, usdPrice) {
+module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOption, usdPrice, imageName) {
   return {
     color: 0xae1917,
     title: `Soul *${soul.retrievedMetadata.name}*`,
@@ -8,6 +8,9 @@ module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOpti
     author: {
       name: 'New Soul Listed!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
+    },
+    image: {
+      url: `attachment://${imageName}`
     },
     description: `Soul listed for **${price} ${paymentOption}** (${usdPrice}$)`,
     fields: [
@@ -21,11 +24,11 @@ module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOpti
         value: soulAttrFormatter(soul.retrievedMetadata.attributes),
         inline: true
       },
-      {
-        name: 'Experience',
-        value: soulExperienceFormatter(soul.experience.activities),
-        inline: true
-      },
+      // {
+      //   name: 'Experience',
+      //   value: soulExperienceFormatter(soul.experience.activities),
+      //   inline: true
+      // },
       {
         name: 'Children',
         value: soulChildsFormatter(soulChildren),
@@ -73,22 +76,23 @@ function soulStatsFormatter(attributes) {
   return returnString;
 }
 
-const shownExperiences = [1, 2, 3, 4, 6, 7]
-function soulExperienceFormatter(experiences) {
-  const expStrings = experiences
-    .filter(exp => shownExperiences.includes(exp.activityId))
-    .map(getExpString)
+// const shownExperiences = [1, 2, 3, 4, 6, 7]
+// function soulExperienceFormatter(experiences) {
+//   console.log(experiences)
+//   const expStrings = experiences
+//     .filter(exp => shownExperiences.includes(exp.activityId))
+//     .map(getExpString)
+//
+//   let returnString = '';
+//
+//   expStrings.forEach(expString => returnString += expString)
+//
+//   return returnString;
+// }
 
-  let returnString = '';
-
-  expStrings.forEach(expString => returnString += expString)
-
-  return returnString;
-}
-
-function getExpString(exp) {
-  return `*${exp.activityName}*: ${exp.experience}\n`
-}
+// function getExpString(exp) {
+//   return `*${exp.activityName}*: ${exp.experience}\n`
+// }
 
 function soulChildsFormatter(childrenMetadata) {
   let returnString = '';

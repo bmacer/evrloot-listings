@@ -4,7 +4,8 @@ const linkWithoutIpfs = require("./ipfs-link-tools")
 module.exports = {
   getItemMetadata,
   getSoulMetadata,
-  getSoulChildrenMetadata
+  getSoulChildrenMetadata,
+  getSoulImage
 }
 
 async function getItemMetadata(tokenId, isCrafted) {
@@ -44,6 +45,12 @@ function removeIpfsStuff(ipfsLink) {
   return linkWithoutIpfs
 }
 
+async function getSoulImage(soulId) {
+  const soulImageUrl = `https://api.evrloot.xyz/api/dynamic/evr-souls/${soulId}`
+  console.log(soulImageUrl);
+  return await fetchAsyncImage(soulImageUrl);
+}
+
 async function fetchAsync(url) {
   return fetch(url).then(response => {
     if (!response.ok) {
@@ -54,3 +61,17 @@ async function fetchAsync(url) {
     return json
   }).catch(error => console.log(error))
 }
+
+async function fetchAsyncImage(url) {
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      throw new Error(`Request failed with status ${response.status}`)
+    }
+    return response.arrayBuffer()
+  }).then(arrayBuffer => {
+    return Buffer.from(arrayBuffer)
+  }).catch(error => console.log(error))
+}
+
+
+

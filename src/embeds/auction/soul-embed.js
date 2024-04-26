@@ -1,6 +1,6 @@
 const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 
-module.exports = function createSoulEmbed(soul, soulChildren, startingPrice, paymentOption, usdPrice, startTime, endTime) {
+module.exports = function createSoulEmbed(soul, soulChildren, startingPrice, paymentOption, usdPrice, startTime, endTime, imageName) {
   return {
     color: 0xae1917,
     title: `Soul *${soul.retrievedMetadata.name}*`,
@@ -34,6 +34,9 @@ module.exports = function createSoulEmbed(soul, soulChildren, startingPrice, pay
         inline: true
       }
     ],
+    image: {
+      url: `attachment://${imageName}`
+    },
   };
 }
 

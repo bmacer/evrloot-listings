@@ -1,10 +1,13 @@
 const { postListing } = require('./discord-bot.js')
-const {getItemMetadata, getSoulMetadata, getSoulChildrenMetadata} = require("./evrloot-ipfs");
+const {getItemMetadata, getSoulMetadata, getSoulChildrenMetadata, getSoulImage} = require("./evrloot-ipfs");
 const createSoulListingEmbed = require('./embeds/listing/soul-embed')
 const createItemListingEmbed = require('./embeds/listing/item-embed')
 const createSoulAuctionEmbed = require('./embeds/auction/soul-embed')
 const createItemAuctionEmbed = require('./embeds/auction/item-embed')
 const {getPriceOfRmrk, getPriceOfGlmr} = require("./fetch-prices");
+const fs = require('fs');
+const {postListingWithImage} = require("./discord-bot");
+const {AttachmentBuilder} = require("discord.js");
 
 const RMRK_CONTRACT_ADDRESS = 'ecf2adaff1de8a512f6e8bfe67a2c836edb25da3'
 const WGLMR_CONTRACT_ADDRESS = 'acc15dc74880c9944775448304b263d191c6077f'
@@ -67,9 +70,28 @@ async function decodeInput(input) {
   if (collection === SOUL_COLLECTION) {
     const soul = await getSoulMetadata(id);
     const soulChildren = await getSoulChildrenMetadata(soul.children);
+
+    const soulImageBuffer = await getSoulImage(id)
+    const imageFileName = `soul_${id}.png`;
+    let path = 'static/'+imageFileName;
+    fs.createWriteStream(path).write(soulImageBuffer);
+    fs.createWriteStream(path).close();
+
+    const attachments = new AttachmentBuilder()
+      .setFile(path)
+      .setName(imageFileName)
+
     readableStartingBidPrice > 0
-      ? await postListing(createSoulAuctionEmbed(soul, soulChildren, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
-      : await postListing(createSoulListingEmbed(soul, soulChildren, readablePrice, paymentOptionText, usdPrice))
+      ? await postListingWithImage(createSoulAuctionEmbed(soul, soulChildren, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime, imageFileName), attachments)
+      : await postListingWithImage(createSoulListingEmbed(soul, soulChildren, readablePrice, paymentOptionText, usdPrice, imageFileName), attachments)
+
+    fs.unlink(path, (err) => {
+      if (err) {
+        console.error('Error removing file:', err);
+        return;
+      }
+      console.log('File removed successfully:', path);
+    });
   } else if (collection === ITEM_COLLECTION) {
     const itemMetadata = await getItemMetadata(id, false);
     readableStartingBidPrice > 0
@@ -81,5 +103,4 @@ async function decodeInput(input) {
       ? await postListing(createItemAuctionEmbed(id, itemMetadata, true, readableStartingBidPrice, paymentOptionText, usdPrice, startTime, endTime))
       : await postListing(createItemListingEmbed(id, itemMetadata, true, readablePrice, paymentOptionText, usdPrice))
   }
-
 }

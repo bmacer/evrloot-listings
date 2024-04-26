@@ -3,6 +3,7 @@ const { Client } = require('discord.js');
 module.exports = {
   setupDiscordBot,
   postListing,
+  postListingWithImage
 };
 
 const client = new Client({intents: 0});
@@ -25,4 +26,14 @@ async function postListing(embed) {
   const channel = guild.channels.cache.get(process.env.LISTINGS_CHANNEL_ID);
 
   await channel.send({embeds: [embed]});
+}
+
+async function postListingWithImage(embed, file) {
+  await client.guilds.fetch();
+  const guild = client.guilds.cache.get(process.env.GUILD_ID);
+
+  await guild.channels.fetch();
+  const channel = guild.channels.cache.get(process.env.LISTINGS_CHANNEL_ID);
+
+  await channel.send({embeds: [embed], files: [file]});
 }
