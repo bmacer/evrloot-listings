@@ -9,6 +9,9 @@ module.exports = function createSoulEmbed(soul, soulChildren, startingPrice, pay
       name: 'New Auction on Soul!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
+    image: {
+      url: `attachment://${imageName}`
+    },
     description: `Starting price: **${startingPrice} ${paymentOption} (${usdPrice}$)**\n` +
                  `Auction started at: <t:${startTime}:f>\n` +
                  `Ending: <t:${endTime}:f> (<t:${endTime}:R>)`,

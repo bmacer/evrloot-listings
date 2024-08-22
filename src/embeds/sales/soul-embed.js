@@ -13,6 +13,9 @@ module.exports = function createSoulEmbed(soul, soulChildren, prices) {
       name: 'Soul sold!',
       icon_url: 'https://game.evrloot.com/assets/icons/moonbeamIcon.png',
     },
+    image: {
+      url: `attachment://${imageName}`
+    },
     description: `# Soul sold!\nSoul sold for ${priceDescription}`,
     fields: [
       {
