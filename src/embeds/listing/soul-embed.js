@@ -3,7 +3,7 @@ const SOUL_COLLECTION = '0x9d1454e198f4b601bfc0069003045b0cbc0e6749'
 module.exports = function createSoulEmbed(soul, soulChildren, price, paymentOption, usdPrice, imageName) {
   return {
     color: 0xae1917,
-    title: `Soul *${soul.retrievedMetadata.name}*`,
+    title: `${getSoulIconForClassName()} Soul *${soul.retrievedMetadata.name}*`,
     url: `https://singular.app/collectibles/moonbeam/${SOUL_COLLECTION}/${soul.tokenId}`,
     author: {
       name: 'New Soul Listed!',
