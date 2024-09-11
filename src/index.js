@@ -20,13 +20,18 @@ async function main() {
   web3.eth.subscribe(
     "logs",
     {
-      address: "0xdF5499A17D487345e0201aCE513b26E5F427A717",
+      address: "0xba6bd2Aace40c9a14c4123717119a80e9fe6738A",
       fromBlock: "latest",
     },
     function (error, result) {
-      if (error) console.log(error);
+      console.log("error");
+      console.log(error);
+      console.log("result");
+      console.log(result);
       if (!error)
         web3.eth.getTransaction(result.transactionHash).then(async (tx) => {
+          console.log("tx");
+          console.log(tx);
           const input = tx.input;
           if (input.startsWith("0xfecb1242")) {
             await decodeInput(input);
@@ -34,30 +39,49 @@ async function main() {
         });
     }
   );
-
-  RMRK_MARKETPLACE.events
-    .NewSale({ fromBlock: "latest" })
-    .on("connected", function (_subscriptionId) {
-      console.log("connected to contract for new sales!");
-    })
-    .on("data", function (event) {
-      publishSale(event);
-    })
-    .on("error", function (error, receipt) {
-      console.log("Error:", error, receipt);
-    });
-
-  RMRK_MARKETPLACE.events
-    .NewBid({ fromBlock: "latest" })
-    .on("connected", function (_subscriptionId) {
-      console.log("connected to contract for new bids!");
-    })
-    .on("data", function (event) {
-      publishSale(event);
-    })
-    .on("error", function (error, receipt) {
-      console.log("Error:", error, receipt);
-    });
 }
+
+// web3.eth.subscribe(
+//   "logs",
+//   {
+//     address: "0xdF5499A17D487345e0201aCE513b26E5F427A717",
+//     fromBlock: "latest",
+//   },
+//   function (error, result) {
+//     if (error) console.log(error);
+//     if (!error)
+//       web3.eth.getTransaction(result.transactionHash).then(async (tx) => {
+//         const input = tx.input;
+//         if (input.startsWith("0xfecb1242")) {
+//           await decodeInput(input);
+//         }
+//       });
+//   }
+// );
+
+//   RMRK_MARKETPLACE.events
+//     .NewSale({ fromBlock: "latest" })
+//     .on("connected", function (_subscriptionId) {
+//       console.log("connected to contract for new sales!");
+//     })
+//     .on("data", function (event) {
+//       publishSale(event);
+//     })
+//     .on("error", function (error, receipt) {
+//       console.log("Error:", error, receipt);
+//     });
+
+//   RMRK_MARKETPLACE.events
+//     .NewBid({ fromBlock: "latest" })
+//     .on("connected", function (_subscriptionId) {
+//       console.log("connected to contract for new bids!");
+//     })
+//     .on("data", function (event) {
+//       publishSale(event);
+//     })
+//     .on("error", function (error, receipt) {
+//       console.log("Error:", error, receipt);
+//     });
+// }
 
 main().catch(console.error);
